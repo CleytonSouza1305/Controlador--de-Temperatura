@@ -1,3 +1,5 @@
+const HttpError = require('../error/HttpError')
+
 const uuid = require('uuid').v4
 
 const users = [
@@ -39,7 +41,7 @@ module.exports = {
 
   deleteUser: (id) => {
     const userIndex = users.findIndex((u) => u.id === id)
-    if (userIndex === -1) return undefined
+    if (userIndex === -1) throw new HttpError(404, 'Usuário não encontrado!')
 
     users.slice(userIndex, 1)
   }
