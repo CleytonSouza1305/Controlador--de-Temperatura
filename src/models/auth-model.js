@@ -24,17 +24,6 @@ module.exports = {
     return newUser
   },
 
-  createAdminUser: (name, cpf, password) => {
-    const newUser = {
-      id: uuid(),
-      name,
-      cpf,
-      password,
-      role: 'admin'
-    }
-    return newUser
-  },
-
   saveUser: (user) => {
     users.push(user)
   },
