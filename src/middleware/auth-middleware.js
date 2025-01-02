@@ -1,5 +1,5 @@
-// module.exports {
-//   authenticatedUser = (req, res, next) {
-    
-//   }
-// }
+module.exports = {
+  authenticateStandardUser: (req, res, next) => {
+    console.log(req.authenticatedUser)
+  }
+}

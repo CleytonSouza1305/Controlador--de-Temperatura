@@ -1,5 +1,5 @@
 const HttpError = require("../error/HttpError")
-const { createStandardUser, getUserByCpf } = require("../models/auth-model")
+const { createStandardUser, getUserByCpf, saveUser } = require("../models/auth-model")
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
@@ -13,6 +13,7 @@ module.exports = {
     
     const hashedPassword = bcrypt.hashSync(password, 10)
     const newUser = createStandardUser(name, cpf, hashedPassword)
+    saveUser(newUser)
     res.status(201).json(newUser)
   },
 
@@ -23,14 +24,16 @@ module.exports = {
     const user = getUserByCpf(cpf)
     if (!user) throw new HttpError(404, 'Usuário não encontrado.')
 
-    if (user.password !== password) throw new HttpError(400, 'Credenciais inválidas.')
+    const isValidPassword = bcrypt.compareSync(password, user.password)
+
+    if (!isValidPassword) throw new HttpError(400, 'Credenciais inválidas.')
 
     const payload ={ id: user.id, name: user.name }
-    const token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '1d' })
+    const token = jwt.sign(payload, process.env.JWT_KEY, { expiresIn: '1d' })
 
     req.authenticated = true
     req.authenticatedUser = token
 
-    res.status(200).json(token)
+    res.status(200).json({ token })
   }
 }
