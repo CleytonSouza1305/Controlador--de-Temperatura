@@ -25,12 +25,12 @@ module.exports = {
   authenticateAdm: (req, res, next) => {
     if (!req.authenticated) throw new HttpError(401, 'Usuário não autenticado.')
 
-    const id= req.user.id
+    const id = req.user.id
     const user = authModel.getUserById(id)
 
     if (!user) throw new HttpError(404, 'Usuário não encontrado.')
-
-    if (user.role !== 'admin') throw new HttpError(403, 'Usuário não autorizado.')
+      console.Console(user)
+    if (user.role !== 'admin' || user.role !== 'standard') throw new HttpError(403, 'Usuário não autorizado.')
 
     next()
   }
